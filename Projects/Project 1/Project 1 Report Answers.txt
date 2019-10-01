@@ -1,0 +1,31 @@
+1. The different protocols that appeared in the unfiltered list include: HTTP, LLMNR, MDNS, NBNS, SSDP, SSL, TCP, TLSv1.2, UDP
+
+2. The GET Message was sent at 11:34:49.592144. The OK was received at 11:34:49.607641. Thus the total time was 0.15497 seconds to send the request and receive the OK reply. 
+
+3. The internet address of the gaia.cs.umass.edu was 128.119.245.12
+
+
+
+
+
+1. My browser and the server are both running HTTP 1.1
+
+2. The accepted language is en, and en-US
+
+3. The status code was 200 OK
+
+4. The length of content being returned is 293 bytes
+
+5. The header data is the same, besides some spacing
+
+6. There is no "IF-MODIFIED-SINCE" in the first HTTP GET.
+
+7. Yes, the server explicitly returned the contents. You can see this because in the contents of the first server response, there is Line-based text data which says "Congratulations!..."
+
+8. The second HTTP GET has "If-Modified-Since: Tue, 01 Oct 2019 05:59:01 GMT\r\n"
+
+9. The status code was 304 Not Modified. The second GET did not explicitly return the contents of the file, because the GET request explicitly asks the server to send the data only if it has been modified since the last time the site was visited. Since it was not modified, the browsers shows the cached data instead
+
+10. The servers response to the initial request was 401 Unauthorized
+
+11. When sending the GET message the second time, a new field called "Authorization" is included. It contains the credentials that was typed into the browser. 
