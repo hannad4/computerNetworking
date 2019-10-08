@@ -1,6 +1,4 @@
 from selenium import webdriver
-from datetime import datetime
-import time
 import sys
 from selenium.webdriver.common.keys import Keys
 from threading import Thread
@@ -9,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import Select
+import time
 import re
 #=================== PRE PROVIDED CODE. DO NOT TOUCH! ===================#
 
@@ -24,8 +23,6 @@ LOGIN_INI = 'https://paws.tcnj.edu/psp/paws/?cmd=login&languageCd=ENG&'
 # After login webpage
 # This URL works for both faculty and students
 LOGIN_URL = 'https://paws.tcnj.edu/psp/paws/EMPLOYEE/SA/h/?tab=DEFAULT'
-now = datetime.now()
-StartingTime = now.strftime("%Y-%m-%d %H:%M:%S")
 
 #=================== END OF PRE-PROVIDED CODE  ==========================#
 
