@@ -1,3 +1,9 @@
+#========================================================================#
+# Name: Daniel Hanna
+# File: paws-Canvas.py
+# Desc: Program to navigate through PAWS and output classes given on input
+#========================================================================#
+
 from selenium import webdriver
 import sys
 from selenium.webdriver.common.keys import Keys

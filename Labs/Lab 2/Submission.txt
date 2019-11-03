@@ -1,0 +1,72 @@
+/// PART 1 ///
+
+1) The IP address of the client computer is 192.168.1.102. The port number is 1161
+
+2) The IP address of gaia.cs.umass.edu is 128.119.245.12. The port number it is using is port 80. 
+
+3) The IP address that my computer is using is 159.91.78.192. The port number is 55721. 
+
+4) The sequence number of the SYN segment that initates the TCP connection is Sequence number 0. This is obvious because the flags section has the SYN flag to 1 which means set. 
+
+5) The SYNACK segment is sequence number 0. The value of the ACK field is 1. This is obvious because both the SYN and ACK fields are set to 1. 
+
+6) The sequence number is 151776. 
+
+7) First Sequence: 0, Time Sent: 1.521143, RTT: 0.286551
+   Second Sequence: 0, Time Sent: 1.536558, RTT: 0.28574  
+   Third Sequence: 1, Time Sent: 1.536677, RTT: 0.285261
+   Fourth Sequence: 1, Time Sent: 1.537225, RTT: 0.285369
+   Fifth Sequence: 702, Time Sent: 1.537445, RTT: 0.001176
+   Sixth Sequence: 2088, Time Sent: 1.537448, RTT: 0.286397
+
+8) The length of each of the first six TCP segments is 1400 bytes. 
+
+9) The available buffer space is 17536 bytes. 
+
+10) There are retransmitted segments in the trace filed. I checked this by seeing if there are packets with the same sequence numbers at a different time. 
+
+11) The receiver is acknowledging 1400 bytes at a time. 
+
+12) The throughput is roughly 35 kilobytes per second. 
+
+13) Based on the plot, the slow start phase seems to last for the first two seconds or so. The congestion avoidance seems to take place for the rest of the time. 
+
+14) One difference is that the measured data does not suggest a that the TCP transmit window occurs linearly. Another thing to note is that the sender is only sending packets in batches of 6 even though there is no limit specified by the receiver. 
+
+/// PART 2 ///
+
+1) I ran nslookup on www.japan.go.jp and got the IP to be 202.214.194.147
+
+2) I ran nslookup on http://www.ox.ac.uk/ and found the server to be nighthawk.dns.ox.ac.uk
+
+3) The IP address is 69.147.82.61
+
+4) They are sent over UDP
+
+5) The destination port is 443. The source port is 56511
+
+6) DNS query is sent to 10.0.0.251. This is the same as the local DNS server. 
+
+7) It is type AAAA, and it does not contain any answers. 
+
+8) No answers are provided in the response message. 
+
+9) The destination IP address of the SYN packet corresponds to the address provided by the DNS response.
+
+10) Yes, the host issues a new DNS query for each image. 
+
+11) The destination port for the DNS query is port 53. The source is also port 53. 
+
+12) The DNS query is sent to the same IP as my local DNS server
+
+13) The type is PTR. There are no answers. 
+
+14) There is one answer, which is the next DNS server to query in route. 
+
+15) The lab handout skipped over question 15. 
+
+16) The IP address is the same as my local DNS server. 
+
+17) The type is PTR DNS query with no answers. 
+
+18) It provides mit.edu and mit.edu.edgekey.net
