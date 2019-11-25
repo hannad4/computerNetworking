@@ -1,0 +1,27 @@
+1) The value in the upper layer protocol field is ICMP 
+
+2) There are 20 bytes in the IP header. The payload of the datagram is 36 bytes. This is calculated because the total length of the payload is 56 bytes and the header is 20 bytes so 50-26=36
+
+3) No, it has not been fragmented because the "More fragments" bit has not been set
+
+4) The checksum and sequence number always changes
+
+5) The header length and time to live stay constant. The fragment number, sequence number, flags, total length, and checksum must change
+
+6) The value of the identification field is incremented by 1 on every outgoing message
+
+7) The value in the identificaiton field is 0x93b7 and time to live of 248. 
+
+8) The identification field changes because it needs to be unique. The time to live remains the same.
+
+9) Yes, it has been fragmented. 
+
+10) The "more fragments" bit has been set to 1 which indicates fragmentation. The fragment offset is 0 which indicates that it is the first fragment. The datagram is a length of 1500. 
+
+11) The fragment offset is 1480 which indicates that it is not the first fragment. Since the "more fragments" bit is set to 0, this means that there are no more fragments. 
+
+12) The fields that change includes the flags, header checksum, total length and fragment offset.
+
+13) 3 fragments were created. 
+
+14) The fragment offset, total length, more fragments bit, and checksum change.
