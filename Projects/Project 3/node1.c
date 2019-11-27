@@ -11,10 +11,9 @@ extern struct rtpkt {
 extern int TRACE;
 extern int YES;
 extern int NO;
-extern float clocktime;
-struct rtpkt *pkt1; 
+extern float clocktime;			/* The clock to be used for the emulator */
+struct rtpkt *pkt1; 	/* This packet will hold the minimum distances */
 
-int connectcosts1[4] = { 1,  0,  1, 999 };
 
 struct distance_table 
 {
@@ -24,23 +23,21 @@ struct distance_table
 
 /* students to write the following two routines, and maybe some others */
 
-
 rtinit1() 
 {
 	int i, j;
 	pkt1 = (struct rtpkt *)malloc( sizeof(struct rtpkt) );
 	pkt1->sourceid = 1;
 
-	printf("NODE1: initialization event at t=%f\n", clocktime );
+	printf("NODE1: initialized at t=%f\n", clocktime );
+	
+	dt1.costs[1][0] = 1; dt1.costs[1][1] = 0; dt1.costs[1][2] = 1; dt1.costs[1][3] = 999;  /* Defining the costs that are officially known */
 
-dt1.costs[1][0] = 1; dt1.costs[1][1] = 0; dt1.costs[1][2] = 1; dt1.costs[1][3] = 999;
-
-	//Two for loops for infinite values.
 	for (i=0; i<1; i++)
 	{ 	
 		for (j=0; j<4; j++)
 		{ 
-			dt1.costs[i][j]=999;
+			dt1.costs[i][j]=999;		/* Setting costs to "infinity" which is 999 */
 		}
 	}
 
@@ -48,25 +45,30 @@ dt1.costs[1][0] = 1; dt1.costs[1][1] = 0; dt1.costs[1][2] = 1; dt1.costs[1][3] =
 	{ 	
 		for (j=0; j<4; j++)
 		{ 
-			dt1.costs[i][j]=999;
+			dt1.costs[i][j]=999;		/* Setting costs to "infinity" which is 999 */
 		}
 	}
 
 
-	pkt1->mincost[0] = dt1.costs[0][0] = 1;	/* cost to node 0 via 0 */
-	pkt1->mincost[1] = 0;					/* cost to itself (redundant => using 0) */
-	pkt1->mincost[2] = dt1.costs[2][2] = 1; /* cost to node 2 via 2 */
-	pkt1->mincost[3] = 999;			/* cost to non-directly attached node */
+	pkt1->mincost[0] = dt1.costs[0][0] = 1;	/* The cost to node 0 is 1 */
+	pkt1->mincost[1] = 0;					/* The cost of a node to itself is 0 */
+	pkt1->mincost[2] = dt1.costs[2][2] = 1; /* The cost to node 2 is 1 */
+	pkt1->mincost[3] = 999;					/* A non directly attached node has a cost of infinity, or 999 */
 
-	printf("...after init distance table is:\n");
-	printdt1(&dt1);	/* print conents of distance table after initialization */
+	printf("Distance table is:\n");
+	printdt1(&dt1);	/* print distance table */
 
-	pkt1->sourceid = 1;
+	pkt1->sourceid = 1;		/* pkt1->sourceid is this node which is 1 */
 
-	sendMin1();		/* sends this node's current minimum (initialized) costs */
+	printf("NODE1: send new min event at t=%f\n\n", clocktime );
+	
+	/* send to all directly attached nodes (0, 2) */
+	for(i=0; i<4; i++ ){
+		if(i==1 || i==3 ) continue;
+		pkt1->destid = i;
+		tolayer2(*pkt1);			 /* Defined in prog3.c */
+	}
 }
-
-
 
 rtupdate1(rcvdpkt)
   struct rtpkt *rcvdpkt;
@@ -74,39 +76,33 @@ rtupdate1(rcvdpkt)
 {
 	int i, change = 0, via = rcvdpkt->sourceid;
 	
-	printf("\nNODE1: rtupdate event at t=%f\n", clocktime );
+	printf("\nNODE1: Update occurred at t=%f\n", clocktime );
 
 	for(i=0; i<4; i++ ){
 		if(i==1 || i==via || rcvdpkt->mincost[i]==999) continue;
 
 		if( pkt1->mincost[i] > (dt1.costs[i][via]=rcvdpkt->mincost[i]+dt1.costs[via][via]) ){
 			pkt1->mincost[i] = dt1.costs[i][via];
-			change = 1;
+			change = 1;		/* A change has occurred. This will be useful a few lines down */
 		}
 	}
 
-	printf("...after update distance table is:\n");
+	printf("\nNew distance table is:\n");
 	printdt1(&dt1);
 
-	if( change )
-		sendMin1();
-	else
-		printf("NODE1: min values haven't been changed\n");
-}
-
-void sendMin1()
-{
-	int i;
-
-	printf("NODE1: send-new-min event at t=%f\n\n", clocktime );
-	
-	/* send to all directly attached nodes (0, 2) */
-	for(i=0; i<4; i++ ){
-		if(i==1 || i==3 ) continue;
-		pkt1->destid = i;
-		tolayer2(*pkt1);
+	if( change ){		/* Change has occurred! */
+		printf("NODE1: Send new min event at t=%f\n\n", clocktime );
+		for(i=0; i<4; i++ ){
+			if(i==1 || i==3 ) continue;
+			pkt1->destid = i;
+			tolayer2(*pkt1);		/* Defined in prog3.c */
+		}
 	}
+	else
+		printf("NODE1: No change in min values\n");
 }
+
+
 
 printdt1(dtptr)
   struct distance_table *dtptr;
@@ -120,7 +116,6 @@ printdt1(dtptr)
   printf("     3|  %3d   %3d\n",dtptr->costs[3][0], dtptr->costs[3][2]);
 
 }
-
 
 
 linkhandler1(linkid, newcost)   

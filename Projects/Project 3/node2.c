@@ -1,3 +1,6 @@
+// PLEASE NOTE: THE CODE FOR node2.c and node3.c ARE VERY SIMILAR TO node0.c and node1.c
+// PLEASE REFER TO node0.c and node1.c FOR COMMENTS ON CODE
+
 #include <stdio.h>
 
 extern struct rtpkt {
@@ -27,11 +30,10 @@ void rtinit2()
 	pkt2 = (struct rtpkt *)malloc( sizeof(struct rtpkt) );
 	pkt2->sourceid = 2;
 
-	printf("NODE2: initialization event at t=%f\n", clocktime );
+	printf("NODE2: initialized at t=%f\n", clocktime );
 
 	dt2.costs[2][0] = 3; dt2.costs[2][1] = 1; dt2.costs[2][2] = 0; dt2.costs[2][3] = 2;
 
-	//Two for loops for infinite values.
 	for (i=0; i<2; i++)
 	{ 	
 		for (j=0; j<4; j++)
@@ -48,17 +50,24 @@ void rtinit2()
 	}
 
 
-	pkt2->mincost[0] = dt2.costs[0][0] = 3;	/* cost to node 0 via 0 */
-	pkt2->mincost[1] = dt2.costs[1][1] = 1;	/* cost to node 1 via 1 */
-	pkt2->mincost[2] = 0;					/* cost to itself (redundant => using 0) */
-	pkt2->mincost[3] = dt2.costs[3][3] = 2;	/* cost to node 3 via 3 */
+	pkt2->mincost[0] = dt2.costs[0][0] = 3;	/* cost to node 0 is 3 */
+	pkt2->mincost[1] = dt2.costs[1][1] = 1;	/* cost to node 1 is 1 */
+	pkt2->mincost[2] = 0;					/* cost to itself is 0 */
+	pkt2->mincost[3] = dt2.costs[3][3] = 2;	/* cost to node 3 is 2 */
 
-	printf("...after init distance table is:\n");
-	printdt2(&dt2);	/* print conents of distance table after initialization */
+	printf("Distance table is:\n");
+	printdt2(&dt2);	
 
 	pkt2->sourceid = 999;
 
-	sendMin2();		/* sends this node's current minimum (initialized) costs */
+
+	printf("NODE2: send new min event occurred at t=%f\n\n", clocktime );
+
+	for(i=0; i<4; i++ ){
+		if(i==2 ) continue;
+		pkt2->destid = i;
+		tolayer2(*pkt2);
+	}
 }
 
 
@@ -68,7 +77,7 @@ void rtupdate2(rcvdpkt)
 {
 	int i, change = 0, via = rcvdpkt->sourceid;
 	
-	printf("\nNODE2: rtupdate event at t=%f\n", clocktime );
+	printf("\nNODE2: Update occurred at t=%f\n", clocktime );
 
 	for(i=0; i<4; i++ ){
 		if(i==2 || i==via || rcvdpkt->mincost[i]==999) continue;
@@ -79,29 +88,20 @@ void rtupdate2(rcvdpkt)
 		}
 	}
 
-	printf("...after update distance table is:\n");
+	printf("\nNew distance table is:\n");
 	printdt2(&dt2);
 
-	if( change )
-		sendMin2();
-	else
-		printf("NODE2: min values haven't been changed\n");
-}
-
-void sendMin2()
-{
-	int i;
-
-	printf("NODE2: send-new-min event at t=%f\n\n", clocktime );
-
-	/* send to all directly attached nodes (0, 1, 3) */
-	for(i=0; i<4; i++ ){
-		if(i==2 ) continue;
-		pkt2->destid = i;
-		tolayer2(*pkt2);
+	if( change ) {
+		printf("NODE2: Send new min event at t=%f\n\n", clocktime );
+		for(i=0; i<4; i++ ){
+			if(i==2 ) continue;
+			pkt2->destid = i;
+			tolayer2(*pkt2);
+		}
 	}
+	else
+		printf("NODE2: No change in min values\n");
 }
-
 
 printdt2(dtptr)
   struct distance_table *dtptr;
